@@ -3,6 +3,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace JSConverterTests
 {
+    internal class User
+    {
+        public int Age { get; set; }
+        public string Name { get; set; }
+        public decimal? Balance { get; set; }
+        public Gender Gender { get; set; }
+    }
+
+    internal enum Gender { Male, Female }
+
     [TestClass]
     public class UnitTest1
     {
@@ -15,11 +25,35 @@ namespace JSConverterTests
         }
 
         [TestMethod]
+        public void TestAdvancedOperators()
+        {
+            string result = Js<int, int>.Convert((x, y) => (x % y / 2) >> 5);
+
+            Assert.AreEqual("function (x, y) { return (((x % y) / 2) >> 5); }", result);
+        }
+
+        [TestMethod]
+        public void TestCoalesceOperator()
+        {
+            string result = Js<User>.Convert(u => u.Balance ?? 0);
+
+            Assert.AreEqual("function (u) { return ((u.Balance == null || u.Balance == undefined) ? 0 : u.Balance); }", result);
+        }
+
+        [TestMethod]
         public void TestConditionalOperator()
         {
             string result = Js<int>.Convert(x => x > 2 ? 3 : 1);
 
             Assert.AreEqual("function (x) { return ((x > 2) ? 3 : 1); }", result);
+        }
+
+        [TestMethod]
+        public void TestMemberAccess()
+        {
+            string result = Js<User>.Convert(u => u.Age);
+
+            Assert.AreEqual("function (u) { return u.Age; }", result);
         }
 
         [TestMethod]

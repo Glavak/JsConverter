@@ -20,9 +20,31 @@ namespace JSConverter
             Visit(node.Right);
             Visit(node.Left);
 
-            returnStack.Push(new BinaryJsExpression(returnStack.Pop(), GetOperator(node.NodeType), returnStack.Pop()));
+            switch (node.NodeType)
+            {
+                case ExpressionType.Coalesce:
+                    returnStack.Push(new CoalesceJsOperator(returnStack.Pop(), returnStack.Pop()));
+                    break;
+                default:
+                    returnStack.Push(new BinaryJsExpression(returnStack.Pop(), GetOperator(node.NodeType), returnStack.Pop()));
+                    break;
+            }
 
             return node;
+        }
+
+        protected override Expression VisitMember(MemberExpression node)
+        {
+            Visit(node.Expression);
+
+            returnStack.Push(new MemberAccesJsExpression(returnStack.Pop(), node.Member.Name, false));
+
+            return node;
+        }
+
+        protected override Expression VisitMethodCall(MethodCallExpression node)
+        {
+            return base.VisitMethodCall(node);
         }
 
         private static string GetOperator(ExpressionType nodeType)
@@ -65,6 +87,16 @@ namespace JSConverter
                     return "==";
                 case ExpressionType.NotEqual:
                     return "!=";
+                case ExpressionType.Modulo:
+                    return "%";
+                case ExpressionType.LeftShift:
+                    return "<<";
+                case ExpressionType.RightShift:
+                    return ">>";
+                case ExpressionType.And:
+                    return "&";
+                case ExpressionType.Or:
+                    return "|";
 
                 default:
                     throw new InvalidEnumArgumentException(nameof(nodeType), (int) nodeType, typeof(ExpressionType));
