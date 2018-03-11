@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JSConverter", "JSConverter\JSConverter.csproj", "{E8D81F8B-B0B1-476E-8164-A20D635FABB0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JSConverterTests", "JSConverterTests\JSConverterTests.csproj", "{29381A6C-3EA2-4763-9320-045F5E8B1E5C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{E8D81F8B-B0B1-476E-8164-A20D635FABB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8D81F8B-B0B1-476E-8164-A20D635FABB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8D81F8B-B0B1-476E-8164-A20D635FABB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29381A6C-3EA2-4763-9320-045F5E8B1E5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29381A6C-3EA2-4763-9320-045F5E8B1E5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29381A6C-3EA2-4763-9320-045F5E8B1E5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29381A6C-3EA2-4763-9320-045F5E8B1E5C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
