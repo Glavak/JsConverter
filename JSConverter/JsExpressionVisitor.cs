@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
@@ -71,7 +72,6 @@ namespace JSConverter
                 var properties = node.Method.DeclaringType.GetProperties()
                     .Where(p => p.Name == possibleProperty);
 
-                //HACK: need to filter out for overriden properties, multiple parameter choices, etc.
                 var property = properties.FirstOrDefault();
                 if (property != null)
                 {
@@ -80,6 +80,25 @@ namespace JSConverter
 
                     returnStack.Push(new IndexJsExpression(returnStack.Pop(), returnStack.Pop()));
                 }
+            }
+            else if (node.Method.DeclaringType == typeof(string) && node.Method.Name == "ToUpper")
+            {
+                Visit(node.Object);
+                returnStack.Push(new MemberAccesJsExpression(returnStack.Pop(), "toUpperCase", true));
+            }
+            else if (node.Method.DeclaringType == typeof(string) && node.Method.Name == "ToLower")
+            {
+                Visit(node.Object);
+                returnStack.Push(new MemberAccesJsExpression(returnStack.Pop(), "toLowerCase", true));
+            }
+            else if (node.Method.DeclaringType == typeof(string) && node.Method.Name == "Trim")
+            {
+                Visit(node.Object);
+                returnStack.Push(new MemberAccesJsExpression(returnStack.Pop(), "trim", true));
+            }
+            else
+            {
+                throw new ArgumentException("Method calling is not supported");
             }
 
             return node;

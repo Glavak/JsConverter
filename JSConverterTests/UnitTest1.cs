@@ -83,9 +83,9 @@ namespace JSConverterTests
         [TestMethod]
         public void TestObjectInitializer()
         {
-            string result = Js<User>.Convert(u => new { NormalizedAge = u.Age - 18, UpperName = u.Name });
+            string result = Js<User>.Convert(u => new { NormalizedAge = u.Age - 18, UpperName = u.Name.ToUpper() });
 
-            Assert.AreEqual("function (u) { return { NormalizedAge: (u.Age - 18), UpperName: u.Name }; }", result);
+            Assert.AreEqual("function (u) { return { NormalizedAge: (u.Age - 18), UpperName: u.Name.toUpperCase() }; }", result);
         }
 
         [TestMethod]
