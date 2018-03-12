@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace JSConverter
@@ -23,8 +24,13 @@ namespace JSConverter
             switch (node.NodeType)
             {
                 case ExpressionType.Coalesce:
-                    returnStack.Push(new CoalesceJsOperator(returnStack.Pop(), returnStack.Pop()));
+                    returnStack.Push(new CoalesceJsExpression(returnStack.Pop(), returnStack.Pop()));
                     break;
+
+                case ExpressionType.ArrayIndex:
+                    returnStack.Push(new IndexJsExpression(returnStack.Pop(), returnStack.Pop()));
+                    break;
+
                 default:
                     returnStack.Push(new BinaryJsExpression(returnStack.Pop(), GetOperator(node.NodeType), returnStack.Pop()));
                     break;
@@ -44,7 +50,24 @@ namespace JSConverter
 
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
-            return base.VisitMethodCall(node);
+            if (node.Method.IsSpecialName && node.Method.Name.StartsWith("get_"))
+            {
+                string possibleProperty = node.Method.Name.Substring(4);
+                var properties = node.Method.DeclaringType.GetProperties()
+                    .Where(p => p.Name == possibleProperty);
+
+                //HACK: need to filter out for overriden properties, multiple parameter choices, etc.
+                var property = properties.FirstOrDefault();
+                if (property != null)
+                {
+                    Visit(node.Arguments.First());
+                    Visit(node.Object);
+
+                    returnStack.Push(new IndexJsExpression(returnStack.Pop(), returnStack.Pop()));
+                }
+            }
+
+            return node;
         }
 
         private static string GetOperator(ExpressionType nodeType)
@@ -124,14 +147,9 @@ namespace JSConverter
 
         protected override Expression VisitConstant(ConstantExpression node)
         {
-            returnStack.Push(new ConstantJsExpression(node.Value.ToString()));
+            returnStack.Push(new ConstantJsExpression(node.Value?.ToString() ?? "null"));
 
             return node;
-        }
-
-        protected override Expression VisitUnary(UnaryExpression node)
-        {
-            return base.VisitUnary(node);
         }
     }
 }

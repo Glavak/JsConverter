@@ -41,9 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinaryJsExpression.cs" />
-    <Compile Include="CoalesceJsOperator.cs" />
+    <Compile Include="CoalesceJsExpression.cs" />
     <Compile Include="ConditionalJsExpression.cs" />
     <Compile Include="ConstantJsExpression.cs" />
+    <Compile Include="IndexJsExpression.cs" />
     <Compile Include="Js.cs" />
     <Compile Include="JsExpression.cs" />
     <Compile Include="JsExpressionVisitor.cs" />

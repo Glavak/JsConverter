@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace JSConverter
+﻿namespace JSConverter
 {
-    internal class CoalesceJsOperator : JsExpression
+    internal class CoalesceJsExpression : JsExpression
     {
         public JsExpression Expression { get; set; }
         public JsExpression IfNull { get; set; }
 
-        public CoalesceJsOperator(JsExpression expression, JsExpression ifNull)
+        public CoalesceJsExpression(JsExpression expression, JsExpression ifNull)
         {
             Expression = expression;
             IfNull = ifNull;

@@ -49,11 +49,35 @@ namespace JSConverterTests
         }
 
         [TestMethod]
+        public void TestNull()
+        {
+            string result = Js<User>.Convert(u => u.Name == null);
+
+            Assert.AreEqual("function (u) { return (u.Name == null); }", result);
+        }
+
+        [TestMethod]
         public void TestMemberAccess()
         {
             string result = Js<User>.Convert(u => u.Age);
 
             Assert.AreEqual("function (u) { return u.Age; }", result);
+        }
+
+        [TestMethod]
+        public void TestArrayIndexer()
+        {
+            string result = Js<int[]>.Convert(x => x[5]);
+
+            Assert.AreEqual("function (x) { return x[5]; }", result);
+        }
+
+        [TestMethod]
+        public void TestArrayIndexerObject()
+        {
+            string result = Js<User>.Convert(u => u.Name[5]);
+
+            Assert.AreEqual("function (u) { return u.Name[5]; }", result);
         }
 
         [TestMethod]
