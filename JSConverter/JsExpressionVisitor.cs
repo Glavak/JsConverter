@@ -39,6 +39,21 @@ namespace JSConverter
             return node;
         }
 
+        protected override Expression VisitNew(NewExpression node)
+        {
+            Dictionary<string, JsExpression> fields = new Dictionary<string, JsExpression>();
+
+            for (int i = 0; i < node.Members.Count; i++)
+            {
+                Visit(node.Arguments[i]);
+                fields[node.Members[i].Name] = returnStack.Pop();
+            }
+
+            returnStack.Push(new InitializerJsExpression(fields));
+
+            return node;
+        }
+
         protected override Expression VisitMember(MemberExpression node)
         {
             Visit(node.Expression);

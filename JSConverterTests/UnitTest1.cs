@@ -81,6 +81,14 @@ namespace JSConverterTests
         }
 
         [TestMethod]
+        public void TestObjectInitializer()
+        {
+            string result = Js<User>.Convert(u => new { NormalizedAge = u.Age - 18, UpperName = u.Name });
+
+            Assert.AreEqual("function (u) { return { NormalizedAge: (u.Age - 18), UpperName: u.Name }; }", result);
+        }
+
+        [TestMethod]
         public void TestFuncName()
         {
             string result = Js<int>.Convert(x => x, "SomeName");
