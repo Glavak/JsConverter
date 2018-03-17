@@ -57,11 +57,46 @@ namespace JSConverter
 
         protected override Expression VisitMember(MemberExpression node)
         {
-            Visit(node.Expression);
+            if(!IsParameter(node))
+            //if (node.Expression.NodeType == ExpressionType.MemberAccess && ((MemberExpression)node.Expression).Expression == null)
+            {
+                string s = Expression.Lambda(node).Compile().DynamicInvoke().ToString();
+                returnStack.Push(new ConstantJsExpression(s));
+            }
+            else
+            {
+                Visit(node.Expression);
 
-            returnStack.Push(new MemberAccesJsExpression(returnStack.Pop(), node.Member.Name, false));
+                returnStack.Push(new MemberAccesJsExpression(returnStack.Pop(), node.Member.Name, false));
+            }
 
             return node;
+        }
+
+        private static bool IsParameter(Expression expr)
+        {
+            // если это просто параметр - ну то есть {x}, то да, надо переводить
+            if (expr.NodeType == ExpressionType.Parameter) return true;
+
+            // если это не обращение к члену вообще - надо вычислять
+            if (!(expr is MemberExpression)) return false;
+
+            // достаем корень цепочки обращений
+            var root = GetRootMember((MemberExpression) expr);
+
+            return root?.NodeType == ExpressionType.Parameter;
+        }
+
+        private static Expression GetRootMember(MemberExpression expr)
+        {
+            var accessee = expr.Expression as MemberExpression;
+            var current = expr.Expression;
+            while (accessee != null)
+            {
+                accessee = accessee.Expression as MemberExpression;
+                if (accessee != null) current = accessee.Expression;
+            }
+            return current;
         }
 
         protected override Expression VisitMethodCall(MethodCallExpression node)

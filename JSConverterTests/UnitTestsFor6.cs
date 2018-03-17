@@ -3,18 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace JSConverterTests
 {
-    internal class User
-    {
-        public int Age { get; set; }
-        public string Name { get; set; }
-        public decimal? Balance { get; set; }
-        public Gender Gender { get; set; }
-    }
-
-    internal enum Gender { Male, Female }
-
     [TestClass]
-    public class UnitTest1
+    public class UnitTestsFor6
     {
         [TestMethod]
         public void TestSimpleOperators()
