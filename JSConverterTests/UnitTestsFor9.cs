@@ -15,5 +15,13 @@ namespace JSConverterTests
 
             Assert.AreEqual("function (u) { return ((2018 - u.Age) > 2000); }", result);
         }
+
+        [TestMethod]
+        public void TestEnums()
+        {
+            string result = Js<User>.Convert(u => u.Gender == Gender.Female);
+
+            Assert.AreEqual("function (u) { return (u.Gender == 1); }", result);
+        }
     }
 }
