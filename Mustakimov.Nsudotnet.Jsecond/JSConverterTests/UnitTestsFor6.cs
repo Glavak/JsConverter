@@ -7,6 +7,14 @@ namespace JSConverterTests
     public class UnitTestsFor6
     {
         [TestMethod]
+        public void TestSimpleConstant()
+        {
+            string result = Js.Convert(() => 2 * 2);
+
+            Assert.AreEqual("function () { return 4; }", result);
+        }
+
+        [TestMethod]
         public void TestSimpleOperators()
         {
             string result = Js<int>.Convert(x => x + 1 * x);
