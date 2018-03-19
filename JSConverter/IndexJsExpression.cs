@@ -15,5 +15,11 @@
         {
             return $"{Object}[{Index}]";
         }
+
+        public override void ReplaceConstant(string what, string withWhat)
+        {
+            Object.ReplaceConstant(what, withWhat);
+            Index.ReplaceConstant(what, withWhat);
+        }
     }
 }

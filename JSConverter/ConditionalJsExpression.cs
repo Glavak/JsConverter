@@ -17,5 +17,12 @@
         {
             return $"({Condition} ? {IfTrue} : {IfFalse})";
         }
+
+        public override void ReplaceConstant(string what, string withWhat)
+        {
+            Condition.ReplaceConstant(what, withWhat);
+            IfTrue.ReplaceConstant(what, withWhat);
+            IfFalse.ReplaceConstant(what, withWhat);
+        }
     }
 }

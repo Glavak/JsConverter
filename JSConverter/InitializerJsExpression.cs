@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JSConverter
 {
@@ -19,6 +16,14 @@ namespace JSConverter
         {
             string fields = string.Join(", ", Fields.Select(pair => $"{pair.Key}: {pair.Value}"));
             return $"{{ {fields} }}";
+        }
+
+        public override void ReplaceConstant(string what, string withWhat)
+        {
+            foreach (var field in Fields.Values)
+            {
+                field.ReplaceConstant(what, withWhat);
+            }
         }
     }
 }

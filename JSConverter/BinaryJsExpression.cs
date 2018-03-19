@@ -17,5 +17,11 @@
         {
             return $"({Left} {Operator} {Right})";
         }
+
+        public override void ReplaceConstant(string what, string withWhat)
+        {
+            Left.ReplaceConstant(what, withWhat);
+            Right.ReplaceConstant(what, withWhat);
+        }
     }
 }

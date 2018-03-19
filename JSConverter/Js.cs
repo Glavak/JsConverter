@@ -8,9 +8,12 @@ namespace JSConverter
     {
         public static string Convert(Expression<Func<T1, object>> expr, string functionName = "")
         {
-            string body = new JsExpressionVisitor().Convert(expr.Body).ToString();
-            string parameters = string.Join(", ", expr.Parameters.Select(p => p.Name));
-            return $"function {functionName}({parameters}) {{ return {body}; }}";
+            var body = new JsExpressionVisitor().Convert(expr.Body);
+            var parameters = string.Join(", ", expr.Parameters.Select(p => p.Name));
+
+            string fnBody = body.IsExpression ? $"return {body};" : body.ToString();
+
+            return $"function {functionName}({parameters}) {{ {fnBody} }}";
         }
     }
 
@@ -18,9 +21,12 @@ namespace JSConverter
     {
         public static string Convert(Expression<Func<T1, T2, object>> expr, string functionName = "")
         {
-            string body = new JsExpressionVisitor().Convert(expr.Body).ToString();
-            string parameters = string.Join(", ", expr.Parameters.Select(p => p.Name));
-            return $"function {functionName}({parameters}) {{ return {body}; }}";
+            var body = new JsExpressionVisitor().Convert(expr.Body);
+            var parameters = string.Join(", ", expr.Parameters.Select(p => p.Name));
+
+            string fnBody = body.IsExpression ? $"return {body};" : body.ToString();
+
+            return $"function {functionName}({parameters}) {{ {fnBody} }}";
         }
     }
 }

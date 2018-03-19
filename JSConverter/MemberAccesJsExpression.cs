@@ -17,5 +17,10 @@
         {
             return $"{Object}.{Member}{(IsMethod ? "()" : "")}";
         }
+
+        public override void ReplaceConstant(string what, string withWhat)
+        {
+            Object.ReplaceConstant(what, withWhat);
+        }
     }
 }

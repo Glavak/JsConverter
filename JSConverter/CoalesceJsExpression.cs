@@ -15,5 +15,11 @@
         {
             return $"(({Expression} == null || {Expression} == undefined) ? {IfNull} : {Expression})";
         }
+
+        public override void ReplaceConstant(string what, string withWhat)
+        {
+            Expression.ReplaceConstant(what, withWhat);
+            IfNull.ReplaceConstant(what, withWhat);
+        }
     }
 }

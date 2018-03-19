@@ -58,7 +58,6 @@ namespace JSConverter
         protected override Expression VisitMember(MemberExpression node)
         {
             if(!IsParameter(node))
-            //if (node.Expression.NodeType == ExpressionType.MemberAccess && ((MemberExpression)node.Expression).Expression == null)
             {
                 string s = Expression.Lambda(node).Compile().DynamicInvoke().ToString();
                 returnStack.Push(new ConstantJsExpression(s));
@@ -101,7 +100,23 @@ namespace JSConverter
 
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
-            if (node.Method.IsSpecialName && node.Method.Name.StartsWith("get_"))
+            if (node.Method.Name == "Select")
+            {
+                var selectorLambda = (LambdaExpression) node.Arguments[1];
+                Visit(selectorLambda.Body);
+                Visit(node.Arguments[0]);
+
+                returnStack.Push(new SelectJsExpression(returnStack.Pop(), returnStack.Pop(), selectorLambda.Parameters[0].ToString()));
+            }
+            else if (node.Method.Name == "Where")
+            {
+                var conditionLambda = (LambdaExpression)node.Arguments[1];
+                Visit(conditionLambda.Body);
+                Visit(node.Arguments[0]);
+
+                returnStack.Push(new WhereJsExpression(returnStack.Pop(), returnStack.Pop(), conditionLambda.Parameters[0].ToString()));
+            }
+            else if (node.Method.IsSpecialName && node.Method.Name.StartsWith("get_"))
             {
                 string possibleProperty = node.Method.Name.Substring(4);
                 var properties = node.Method.DeclaringType.GetProperties()

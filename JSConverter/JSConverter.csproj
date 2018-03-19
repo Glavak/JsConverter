@@ -51,6 +51,8 @@
     <Compile Include="JsExpressionVisitor.cs" />
     <Compile Include="MemberAccesJsExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectJsExpression.cs" />
+    <Compile Include="WhereJsExpression.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

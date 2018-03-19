@@ -13,5 +13,10 @@
         {
             return ConstantValue;
         }
+
+        public override void ReplaceConstant(string what, string withWhat)
+        {
+            if (ConstantValue == what) ConstantValue = withWhat;
+        }
     }
 }
