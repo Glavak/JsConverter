@@ -28,16 +28,30 @@
         }
 
         /// <summary>
+        /// Gets combined body of this Where query, and all of it's children queries
+        /// </summary>
+        public string GetCombinedFrom()
+        {
+            if (From is WhereJsExpression whereExpression)
+            {
+                return whereExpression.GetCombinedFrom();
+            }
+            else
+            {
+                return From.ToString();
+            }
+        }
+
+        /// <summary>
         /// Gets combined condition of this Where query, and all of it's children queries
         /// </summary>
-        /// <returns></returns>
         public string GetCombinedCondition(string replaceConditionParameter)
         {
             var ourCondition = Condition.ToString().Replace(ConditionParameter, replaceConditionParameter);
             if (From is WhereJsExpression whereExpression)
             {
                 var theirCondition = whereExpression.GetCombinedCondition(replaceConditionParameter);
-                return $"({ourCondition} || {theirCondition})";
+                return $"({ourCondition} && {theirCondition})";
             }
             else
             {

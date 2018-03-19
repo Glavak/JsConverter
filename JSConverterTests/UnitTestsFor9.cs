@@ -48,5 +48,13 @@ namespace JSConverterTests
 
             Assert.AreEqual("function (x, age) { var r = []; for(var i=0;i<x.length;i++) { if (x[i].Age > age) r.push(x[i].Name); } return r; }", result);
         }
+
+        [TestMethod]
+        public void TestLinqCombinedX2()
+        {
+            string result = Js<User[], int>.Convert((x, age) => from t in x where t.Age > age where t.Gender == Gender.Male select t.Name);
+
+            Assert.AreEqual("function (x, age) { var r = []; for(var i=0;i<x.length;i++) { if ((x[i].Gender == 0) && (x[i].Age > age)) r.push(x[i].Name); } return r; }", result);
+        }
     }
 }

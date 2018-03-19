@@ -19,18 +19,23 @@
 
         public override string ToString()
         {
-            string from = From.ToString();
-            string selector = Selector.ToString();
-
-            selector = selector.Replace(SelectorParameter, from + "[i]");
-
             if (From is WhereJsExpression whereExpression)
             {
+                string from = whereExpression.GetCombinedFrom();
+                string selector = Selector.ToString();
+
+                selector = selector.Replace(SelectorParameter, from + "[i]");
+
                 string condition = whereExpression.GetCombinedCondition(from + "[i]");
                 return $"var r = []; for(var i=0;i<{from}.length;i++) {{ if {condition} r.push({selector}); }} return r;";
             }
             else
             {
+                string from = From.ToString();
+                string selector = Selector.ToString();
+
+                selector = selector.Replace(SelectorParameter, from + "[i]");
+
                 return $"var r = []; for(var i=0;i<{from}.length;i++) {{ r.push({selector}); }} return r;";
             }
         }
