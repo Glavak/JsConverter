@@ -42,6 +42,13 @@ namespace JSConverterTests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestNotLinqWhere()
+        {
+            Js.Convert(() => new User().Where());
+        }
+
+        [TestMethod]
         public void TestLinqCombined()
         {
             string result = Js<User[], int>.Convert((x, age) => from t in x where t.Age > age select t.Name);
