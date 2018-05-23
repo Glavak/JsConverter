@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace JSConverter
 {
@@ -101,17 +100,18 @@ namespace JSConverter
 
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
-            if (node.Method.Name == "Select" &&
-                node.Method.Module.Assembly == Assembly.GetAssembly(typeof(System.Linq.Enumerable)))
+            if (node.Method.IsGenericMethod &&
+                node.Method.GetGenericMethodDefinition() == typeof(Enumerable).GetMethods().First(m=>m.Name == "Select"))
             {
+                Console.WriteLine(node.Method.Module.FullyQualifiedName);
                 var selectorLambda = (LambdaExpression) node.Arguments[1];
                 Visit(selectorLambda.Body);
                 Visit(node.Arguments[0]);
 
                 returnStack.Push(new SelectJsExpression(returnStack.Pop(), returnStack.Pop(), selectorLambda.Parameters[0].ToString()));
             }
-            else if (node.Method.Name == "Where" &&
-                     node.Method.Module.Assembly == Assembly.GetAssembly(typeof(System.Linq.Enumerable)))
+            else if (node.Method.IsGenericMethod && 
+                     node.Method.GetGenericMethodDefinition() == typeof(Enumerable).GetMethods().First(m => m.Name == "Where"))
             {
                 var conditionLambda = (LambdaExpression)node.Arguments[1];
                 Visit(conditionLambda.Body);
